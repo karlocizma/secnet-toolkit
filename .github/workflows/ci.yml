@@ -36,7 +36,7 @@ jobs:
       # Compiling Pebble took ~25 s on every run; the binaries are cached per pinned version.
       - name: Cache Pebble
         id: pebble
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/pebble-bin
           key: pebble-${{ runner.os }}-${{ env.PEBBLE_VERSION }}
@@ -67,7 +67,7 @@ jobs:
         with:
           node-version: 22
       - id: deps
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-22-${{ hashFiles('frontend/package-lock.json') }}
@@ -91,14 +91,14 @@ jobs:
         with:
           node-version: 22
       - id: deps
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-22-${{ hashFiles('frontend/package-lock.json') }}
       - if: steps.deps.outputs.cache-hit != 'true'
         run: npm ci --no-audit --no-fund
       # Babel/ESLint caches: restored from the newest earlier run and refreshed every time.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: frontend/node_modules/.cache
           key: cra-cache-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}-${{ github.sha }}
@@ -118,8 +118,8 @@ jobs:
         image: [backend, frontend]
     steps:
       - uses: actions/checkout@v7
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
         with:
           context: ./${{ matrix.image }}
           load: true
